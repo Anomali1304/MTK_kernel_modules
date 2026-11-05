@@ -35,6 +35,44 @@ CONFIG_MALI_PROTECTED_MEMORY_ALLOCATOR := y
 comma := ,
 PARAMS :=
 
+ifdef MTK_PLATFORM
+ifeq ($(MTK_PLATFORM),mt6789)
+ifneq (,$(wildcard mt6789))
+	PARAMS += mali,mt6789,mali_valhall,mali-r32p1,mali_valhall_r32p1_mt6789
+endif
+endif
+ifeq ($(MTK_PLATFORM),mt6833)
+ifneq (,$(wildcard mt6833))
+	PARAMS += mali,mt6833,mali_valhall,mali-r32p1,mali_valhall_r32p1_mt6833
+endif
+endif
+ifeq ($(MTK_PLATFORM),mt6855)
+ifneq (,$(wildcard mt6855))
+	PARAMS += img,mt6855,m1.15RTM26133109,n
+	PARAMS += img,mt6855,m1.15RTM26133109_TD,y
+endif
+endif
+ifeq ($(MTK_PLATFORM),mt6879)
+ifneq (,$(wildcard mt6879))
+	PARAMS += mali,mt6879,mali_valhall,mali-r32p1,mali_valhall_r32p1_mt6879
+endif
+endif
+ifeq ($(MTK_PLATFORM),mt6893)
+ifneq (,$(wildcard mt6893))
+	PARAMS += mali,mt6893,mali_valhall,mali-r32p1,mali_valhall_r32p1_mt6893
+endif
+endif
+ifeq ($(MTK_PLATFORM),mt6895)
+ifneq (,$(wildcard mt6895))
+	PARAMS += mali,mt6895,mali_valhall,mali-r32p1,mali_valhall_r32p1_mt6895
+endif
+endif
+ifeq ($(MTK_PLATFORM),mt6983)
+ifneq (,$(wildcard mt6983))
+	PARAMS += mali,mt6983,mali_valhall,mali-r32p1,mali_valhall_r32p1_mt6983
+endif
+endif
+else
 ifneq (,$(wildcard mt6789))
 	PARAMS += mali,mt6789,mali_valhall,mali-r32p1,mali_valhall_r32p1_mt6789
 endif
@@ -58,6 +96,7 @@ endif
 ifneq (,$(wildcard mt6983))
 	PARAMS += mali,mt6983,mali_valhall,mali-r32p1,mali_valhall_r32p1_mt6983
 endif
+endif
 
 all modules_install clean: RULE := $(BUILD_RULE)
 all modules_install clean: MEMORY_GROUP_MANAGER := $(CONFIG_MALI_MEMORY_GROUP_MANAGER)
@@ -70,6 +109,7 @@ $(targets_build):
 	$(call build_kernel_modules_$(word 1,$(param)),$(word 2,$(param)),$(word 3,$(param)),$(word 4,$(param)),$(word 5,$(param)))
 
 targets_install := $(addprefix install_,$(PARAMS))
+.NOTPARALLEL: $(targets_install)
 modules_install: $(targets_install)
 $(targets_install):
 	$(eval param=$(subst $(comma), ,$(subst install_,,$@)))
